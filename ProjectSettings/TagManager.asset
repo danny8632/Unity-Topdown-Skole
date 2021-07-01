@@ -8,6 +8,8 @@ TagManager:
   - Bullet
   - Player_Bullet
   - Flag
+  - Weapon
+  - SafeZone
   layers:
   - Default
   - TransparentFX

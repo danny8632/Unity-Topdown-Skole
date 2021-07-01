@@ -10,11 +10,10 @@ public class Enemy : MonoBehaviour
     private bool canSeePlayer = false;
     private bool isShooting = false;
 
-    public float shootDelay = 3f;
+    public float shootDelay = 2f;
     public float viewDistance = 15f;
     public LayerMask layermask;
     public Transform[] waypoints;
-    public Transform player;
  
     void Start()
     {
@@ -24,7 +23,7 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (canSeePlayer)
+        if (canSeePlayer || GameController.instance.IsFlagTaken())
         {
             AttackPlayer();
         }
@@ -38,7 +37,7 @@ public class Enemy : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, viewDistance, layermask);
 
-        canSeePlayer = hit.collider != null && hit.collider.gameObject.tag == "Player";
+        canSeePlayer = (hit.collider != null && hit.collider.gameObject.tag == "Player");
     }
 
     IEnumerator ValidatePlayer()
@@ -50,21 +49,23 @@ public class Enemy : MonoBehaviour
     IEnumerator shootAtPlayer()
     {
         isShooting = true;
-        shoot.shoot(gameObject.tag);
-        yield return new WaitForSeconds(2f);
+        shoot.shoot();
+        yield return new WaitForSeconds(shootDelay);
         isShooting = false;
     }
 
     void AttackPlayer()
     {
-        mov.LookAtPos(player.position, -90f);
+        if (GameController.instance.player == null) return;
 
-        if(Vector2.Distance(transform.position, player.position) > 4f)
+        mov.LookAtPos(GameController.instance.player.transform.position, -90f);
+
+        if(Vector2.Distance(transform.position, GameController.instance.player.transform.position) > 4f)
         {
-            mov.MoveByPos(player.position);
+            mov.MoveByPos(GameController.instance.player.transform.position);
         }
 
-        if (isShooting == false)
+        if (isShooting == false && canSeePlayer)
         {
             StartCoroutine(shootAtPlayer());
         }

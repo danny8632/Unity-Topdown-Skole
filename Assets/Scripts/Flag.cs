@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class Flag : MonoBehaviour
 {
-    private bool isCaptured = false;
-
-    public Transform playerFlagPoint;
-
+    private Transform playerFlagPoint;
 
     private void FixedUpdate()
     {
-        if(isCaptured)
+        if(GameController.instance.IsFlagTaken())
         {
             transform.position = playerFlagPoint.position;
 
@@ -24,12 +21,13 @@ public class Flag : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (isCaptured) return;
-
         if (collision.gameObject.tag == "Player")
         {
-            isCaptured = true;
-        }
+            if (GameController.instance.IsFlagTaken()) return;
 
+            playerFlagPoint = collision.gameObject.transform.GetChild(2).transform;
+
+            GameController.instance.TakeFlag(true);
+        }
     }
 }

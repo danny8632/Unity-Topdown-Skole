@@ -5,33 +5,33 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    public Slider slider;
+    private Slider slider;
     public Transform NPC;
-    public Color low;
-    public Color high;
     public Vector3 offset;
-    public Image Fill;
+
+
+    private void Awake()
+    {
+        slider = gameObject.GetComponent<Slider>();
+    }
 
     public void SetHealth(float health, float maxHealth)
     {
-        Debug.Log(health);
-        Debug.Log(maxHealth);
-
-
-        slider.gameObject.SetActive(health < maxHealth);
+        gameObject.SetActive(health < maxHealth);
         slider.value = health;
         slider.maxValue = maxHealth;
-        //Fill.color = Color.Lerp(low, high, slider.normalizedValue);
     }
 
     void FixedUpdate()
     {
-        if(NPC == null)
+        if (NPC == null)
         {
             Destroy(gameObject);
         }
-
-        Vector2 pos = Camera.main.WorldToScreenPoint(NPC.position + offset);
-        slider.transform.position = pos;
+        else
+        {
+            Vector2 pos = Camera.main.WorldToScreenPoint(NPC.position + offset);
+            slider.transform.position = pos;
+        }
     }
 }

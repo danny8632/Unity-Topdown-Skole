@@ -7,10 +7,25 @@ public class Health : MonoBehaviour
     public float health = 100f;
     private float maxHealth = 100f;
 
-    public HealthBar healthBar;
+    private HealthBar healthBar;
+
+    public GameObject healthBarPrefab;
+
+    private GameObject canvas;
+
+    public AudioClip dieSound;
 
     private void Start()
     {
+        canvas = GameObject.Find("Canvas");
+
+        Vector3 healthbarPos = new Vector3(transform.position.x, transform.position.y, 0);
+
+        GameObject HB = Instantiate(healthBarPrefab, healthbarPos, new Quaternion(), canvas.transform);
+
+        healthBar = HB.GetComponent<HealthBar>();
+        healthBar.NPC = gameObject.transform;
+
         maxHealth = health;
         
         if(healthBar != null)
@@ -29,12 +44,15 @@ public class Health : MonoBehaviour
             {
                 case "Player":
                     GameController.instance.AddScore(-1000);
+                    GameController.instance.PlayerDie();
                     break;
                 case "Enemy":
                     GameController.instance.AddScore(100);
                     break;
 
             }
+
+            AudioSource.PlayClipAtPoint(dieSound, Vector3.zero);
 
             Destroy(gameObject);
         }

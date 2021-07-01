@@ -23,10 +23,15 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == owner) return;
+        string colTag = collision.gameObject.tag;
+        Health H = collision.gameObject.GetComponent<Health>();
 
-        collision.gameObject.GetComponent<Health>().TakeDamage(damage);
+        if (colTag == owner || colTag == "Flag" || colTag == "Weapon") return;
 
-        Destroy(gameObject);
+        if (H != null)
+        {
+            collision.gameObject.GetComponent<Health>().TakeDamage(damage);
+            Destroy(gameObject);
+        }
     }
 }

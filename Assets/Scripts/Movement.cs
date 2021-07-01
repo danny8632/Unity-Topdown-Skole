@@ -21,15 +21,17 @@ public class Movement : MonoBehaviour
     
     public void LookAtPos(Vector2 pos, float rotation = 0)
     {
+        if (body == null) return;
+
         Vector2 lookdir = pos - body.position;
         float angle = Mathf.Atan2(lookdir.y, lookdir.x) * Mathf.Rad2Deg + rotation;
         body.rotation = angle;
     }
 
 
-    public void MoveByInput(float x, float y)
+    public void MoveByInput(float x = 0, float y = 0)
     {
-        if (shoot.shooting) return;
+        if (shoot == null || shoot.shooting) return;
 
         Vector2 pos = Vector2.zero;
         pos.x = x;

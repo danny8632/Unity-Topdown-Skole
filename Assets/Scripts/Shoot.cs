@@ -11,23 +11,26 @@ public class Shoot : MonoBehaviour
 
     public bool shooting = false;
     public float bulletForce = 20f;
+    public float damage = 10f;
 
+    public AudioClip gunSound;
 
     void Start()
     {
         anim = gameObject.GetComponent<Animator>();
     }
 
-    public void shoot(string ownerTag = "")
+    public void shoot()
     {
+
         if(!shooting)
         {
-            StartCoroutine(Shooting(ownerTag));
+            StartCoroutine(Shooting());
         }
     }
 
 
-    IEnumerator Shooting(string ownerTag = "")
+    IEnumerator Shooting()
     {
         if (!shooting)
         {
@@ -39,9 +42,16 @@ public class Shoot : MonoBehaviour
             }
 
             GameObject bullet = Instantiate(bulletPrefab, firepoint.position, firepoint.rotation);
-            bullet.GetComponent<Bullet>().owner = ownerTag;
+
+            Bullet bulletScript = bullet.GetComponent<Bullet>();
             Rigidbody2D body = bullet.GetComponent<Rigidbody2D>();
+
+            bulletScript.owner = gameObject.tag;
+            bulletScript.damage = damage;
+
             body.AddForce(firepoint.up * bulletForce, ForceMode2D.Impulse);
+
+            AudioSource.PlayClipAtPoint(gunSound, Vector3.zero);
 
             yield return new WaitForSeconds(0.2f);
 
