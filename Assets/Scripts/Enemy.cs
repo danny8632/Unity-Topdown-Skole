@@ -7,8 +7,9 @@ public class Enemy : MonoBehaviour
     private Movement mov;
     private Shoot shoot;
     private int waypointIndex = 0;
-    private bool canSeePlayer = false;
-    private bool isShooting = false;
+    public bool canSeePlayer = false;
+    public bool isShooting = false;
+    public bool agro = false;
 
     public float shootDelay = 2f;
     public float viewDistance = 15f;
@@ -23,6 +24,8 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameController.instance.UIScreenShown) return;
+
         if (canSeePlayer || GameController.instance.IsFlagTaken())
         {
             AttackPlayer();
@@ -37,12 +40,12 @@ public class Enemy : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, viewDistance, layermask);
 
-        canSeePlayer = (hit.collider != null && hit.collider.gameObject.tag == "Player");
+        canSeePlayer = agro || (hit.collider != null && hit.collider.gameObject.tag == "Player");
     }
 
     IEnumerator ValidatePlayer()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         LookForPlayer();
     }
 
@@ -88,5 +91,17 @@ public class Enemy : MonoBehaviour
             }
         }
         LookForPlayer();
+    }
+
+    public void GotHit()
+    {
+        StartCoroutine( Agro() );
+    }
+
+    IEnumerator Agro()
+    {
+        agro = true;
+        yield return new WaitForSeconds(10f);
+        agro = false;
     }
 }

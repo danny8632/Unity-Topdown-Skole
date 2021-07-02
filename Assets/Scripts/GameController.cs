@@ -14,19 +14,26 @@ public class GameController : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject player;
 
+    public GameObject gameComplete;
+
     private int Score = 0;
     private bool isFlagTaken = false;
 
     private int lives = 3;
 
-    private int sceneIndex = 1;
+    public int sceneIndex = 1;
 
     private Transform playerSpawnPoint;
+
+    public bool UIScreenShown = false;
 
     private void Awake()
     {
         if (instance == null)
         {
+            isFlagTaken = false;
+            UIScreenShown = false;
+            sceneIndex = 1;
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -39,6 +46,10 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        isFlagTaken = false;
+        UIScreenShown = false;
+        sceneIndex = 1;
+
         GameObject scoretextObject = GameObject.Find("ScoreText");
         GameObject livestextObject = GameObject.Find("LivesText");
 
@@ -62,8 +73,6 @@ public class GameController : MonoBehaviour
         }
 
         updateUI();
-
-        GetComponent<AudioSource>().Play();
     }
 
 
@@ -115,13 +124,22 @@ public class GameController : MonoBehaviour
     }
 
 
+    public void LevelComplete()
+    {
+        isFlagTaken = false;
+        UIScreenShown = true;
+        GameObject canvas = GameObject.Find("Canvas");
+        Instantiate(gameComplete, canvas.transform);
+    }
+
+
     public void levelUp()
     {
+        isFlagTaken = false;
+        UIScreenShown = false;
         sceneIndex++;
 
-        TakeFlag(false);
-
-        if (SceneManager.sceneCount > sceneIndex)
+        if (SceneManager.sceneCountInBuildSettings > sceneIndex)
         {
             SceneManager.LoadScene(sceneIndex);
         }
@@ -133,6 +151,15 @@ public class GameController : MonoBehaviour
     }
 
 
+    public void GotoMainMenu()
+    {
+        isFlagTaken = false;
+        UIScreenShown = false;
+        TakeFlag(false);
+        SceneManager.LoadScene(0);
+    }
+
+
     public GameObject getPlayer()
     {
         return player;
@@ -141,6 +168,8 @@ public class GameController : MonoBehaviour
 
     public void startGame()
     {
+        isFlagTaken = false;
+        UIScreenShown = false;
         SceneManager.LoadScene(sceneIndex);
     }
 

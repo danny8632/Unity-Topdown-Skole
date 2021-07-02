@@ -46,6 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 6810084522984658142, guid: b24e81e52977b3a43b5a7413da187f26, type: 3}
   player: {fileID: 0}
+  gameComplete: {fileID: 3668468724606642734, guid: 25fc81fa42a4d9343b4a2edbd11e6ef5, type: 3}
+  sceneIndex: 1
+  UIScreenShown: 0
 --- !u!82 &5624252462996124451
 AudioSource:
   m_ObjectHideFlags: 0

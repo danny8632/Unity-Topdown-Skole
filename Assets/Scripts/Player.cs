@@ -26,7 +26,9 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && shoot.shooting == false)
+        if (GameController.instance.UIScreenShown) return;
+
+        if (Input.GetButtonDown("Fire1") && shoot.shooting == false)
         {
             StartCoroutine(shootAnimation());
         }
@@ -45,6 +47,8 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (GameController.instance.UIScreenShown) return;
+
         if (mov == null) return;
 
         mov.LookAtPos(Camera.main.ScreenToWorldPoint(Input.mousePosition));
@@ -64,10 +68,12 @@ public class Player : MonoBehaviour
             }
 
             skin.sprite = spriteArray[weaponId];
+
+            Destroy(collision.gameObject);
         }
         else if (collision.gameObject.tag == "SafeZone" && GameController.instance.IsFlagTaken())
         {
-            GameController.instance.levelUp();
+            GameController.instance.LevelComplete();
         }
     }
 

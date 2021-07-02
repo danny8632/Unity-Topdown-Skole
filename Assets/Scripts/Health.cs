@@ -57,6 +57,11 @@ public class Health : MonoBehaviour
             Destroy(gameObject);
         }
 
+        if(gameObject.tag == "Enemy")
+        {
+            gameObject.GetComponent<Enemy>().GotHit();
+        }
+
         ChangeHealthBar();
     }
 

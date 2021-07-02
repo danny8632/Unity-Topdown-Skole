@@ -48,7 +48,7 @@ public class Movement : MonoBehaviour
 
     public void MoveByPos(Vector2 pos)
     {
-        if (shoot.shooting) return;
+        if (shoot == null || shoot.shooting) return;
 
         if (anim != null)
         {
